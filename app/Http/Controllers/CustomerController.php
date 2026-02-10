@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Http\Request;
+use Pest\ArchPresets\Custom;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
-use Pest\ArchPresets\Custom;
 
 class CustomerController extends Controller
 {
@@ -14,7 +15,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::paginate(10);
+        $customers = Customer::latest()->paginate(10);
 
         return view('customers.index', compact('customers'));
     }
@@ -24,15 +25,25 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return view('customers.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCustomerRequest $request)
+    public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:customers,email',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        Customer::create($validatedData);
+
+        return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
 
     /**
