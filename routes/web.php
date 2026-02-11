@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\InteractionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,12 +18,21 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Customer routes
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
     Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
     Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
     Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
     Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
+    // interaction routes
+    Route::get('/interactions', [InteractionController::class, 'index'])->name('interactions.index');
+    Route::get('/interactions/create', [InteractionController::class, 'create'])->name('interactions.create');
+    Route::post('/interactions', [InteractionController::class, 'store'])->name('interactions.store');
+    Route::get('/interactions/{interaction}/edit', [InteractionController::class, 'edit'])->name('interactions.edit');
+    Route::put('/interactions/{interaction}', [InteractionController::class, 'update'])->name('interactions.update');
+    Route::delete('/interactions/{interaction}', [InteractionController::class, 'destroy'])->name('interactions.destroy');
 });
 
 require __DIR__.'/auth.php';

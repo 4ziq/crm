@@ -1,61 +1,72 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Customer Information') }}
+            {{ __('Edit Customer: ' . $customer->name) }}
         </h2>
     </x-slot>
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{-- Form to create a edit customer information --}}
-                    <form action="{{ route('customers.update', $customer->id) }}" method="POST">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-100">
+                <div class="p-8 text-gray-900">
+
+                    <form action="{{ route('customers.update', $customer->id) }}" method="POST" class="space-y-6">
                         @csrf
-                        @method('PUT') 
-                        {{-- name --}}
-                        <x-input-label for="name" :value="__('Name')" />
-                        <x-text-input id="name" name="name" type="text" value="{{ $customer->name }}" class="mt-1 block w-full mb-2"
-                            autocomplete="name" />
-                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                        {{-- end name --}}
+                        @method('PUT')
 
-                        {{-- email --}}
-                        <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" name="email" type="email" value="{{ $customer->email }}" class="mt-1 block w-full mb-2"
-                            autocomplete="email" />
-                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                        {{-- end email --}}
-
-                        {{-- phone --}}
-                        <x-input-label for="phone" :value="__('Phone (optional)')" />
-                        <x-text-input id="phone" name="phone" type="text" value="{{ $customer->phone }}" class="mt-1 block w-full mb-2"
-                            autocomplete="phone" />
-                        <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-                        {{-- end phone --}}
-
-                        {{-- address --}}
-                        <div class="mb-4">
-                            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-                            <textarea name="address" id="address" rows=3
-                                class="mt-1 mb-2 block w-full border border-gray-300 rounded-md shadow-sm p-2">{{ old('address', $customer->address) }}</textarea>
+                        <!-- Name Field -->
+                        <div>
+                            <x-input-label for="name" :value="__('Full Name')" />
+                            <x-text-input id="name" name="name" type="text" :value="old('name', $customer->name)"
+                                class="mt-1 block w-full" />
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
-                        {{-- end address --}}
 
-                        {{-- notes --}}
-                        <div class="mb-4">
-                            <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
-                            <textarea name="notes" id="notes" rows=3
-                                class="mt-1 mb-2 block w-full border border-gray-300 rounded-md shadow-sm p-2">{{ old('notes', $customer->notes) }}</textarea>
+                        <!-- Contact Grid (Email & Phone) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <x-input-label for="email" :value="__('Email Address')" />
+                                <x-text-input id="email" name="email" type="email" :value="old('email', $customer->email)"
+                                    class="mt-1 block w-full" />
+                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="phone" :value="__('Phone Number')" />
+                                <x-text-input id="phone" name="phone" type="text" :value="old('phone', $customer->phone)"
+                                    class="mt-1 block w-full" />
+                                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                            </div>
                         </div>
-                        {{-- end notes --}}
 
-                        <div class="flex items-center justify-between pt-4">
-                            <a href="{{ route('customers.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
-                                ← Back to Customers
+                        <!-- Address Field -->
+                        <div>
+                            <x-input-label for="address" :value="__('Physical Address')" />
+                            <textarea name="address" id="address" rows="3"
+                                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('address', $customer->address) }}</textarea>
+                            <x-input-error :messages="$errors->get('address')" class="mt-2" />
+                        </div>
+
+                        <!-- Notes Area -->
+                        <div>
+                            <div class="flex justify-between">
+                                <x-input-label for="notes" :value="__('Internal Notes')" />
+                                <span class="text-xs text-gray-400">Optional</span>
+                            </div>
+                            <textarea name="notes" id="notes" rows="4"
+                                class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('notes', $customer->notes) }}</textarea>
+                            <x-input-error :messages="$errors->get('notes')" class="mt-2" />
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="flex items-center justify-end gap-4 pt-4 border-t border-gray-100">
+                            <a href="{{ route('customers.index') }}"
+                                class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                {{ __('Cancel') }}
                             </a>
 
                             <x-primary-button>
-                                {{ __('Update') }}
+                                {{ __('Update Customer') }}
                             </x-primary-button>
                         </div>
                     </form>
