@@ -21,17 +21,19 @@
                     <!-- Search & Filters -->
                     <form method="GET" action="{{ route('tickets.index') }}"
                         class="p-5 border-b border-gray-100 bg-gray-50/50">
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-                            <!-- Search -->
-                            <div>
+                        <!-- Top Row -->
+                        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+
+                            <!-- LEFT: Filters -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
+
+                                <!-- Search -->
                                 <input type="text" name="search" value="{{ request('search') }}"
                                     placeholder="Search ticket, customer..."
                                     class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                            </div>
 
-                            <!-- Status Filter -->
-                            <div>
+                                <!-- Status -->
                                 <select name="status"
                                     class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                                     <option value="">All Status</option>
@@ -44,10 +46,8 @@
                                     <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>Closed
                                     </option>
                                 </select>
-                            </div>
 
-                            <!-- Priority Filter -->
-                            <div>
+                                <!-- Priority -->
                                 <select name="priority"
                                     class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                                     <option value="">All Priority</option>
@@ -58,9 +58,8 @@
                                     <option value="high" {{ request('priority') == 'high' ? 'selected' : '' }}>High
                                     </option>
                                 </select>
-                            </div>
 
-                            <div>
+                                <!-- Assigned -->
                                 <select name="assigned_to"
                                     class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
                                     <option value="">All Assignees</option>
@@ -73,20 +72,54 @@
                                 </select>
                             </div>
 
-                            <!-- Buttons -->
-                            <div class="flex space-x-2">
+                            <!-- RIGHT: Actions -->
+                            <div class="flex items-center gap-3">
+
+                                <!-- Filter -->
                                 <button type="submit"
-                                    class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
+                                    class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 shadow-sm">
                                     Filter
                                 </button>
 
+                                <!-- Reset -->
                                 <a href="{{ route('tickets.index') }}"
                                     class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300">
                                     Reset
                                 </a>
+
+                                <!-- Divider -->
+                                <div class="h-6 w-px bg-gray-300"></div>
+
+                                <!-- Export Dropdown -->
+                                <div x-data="{ open: false }" class="relative">
+                                    <button type="button" @click="open = !open"
+                                        class="px-4 py-2 bg-emerald-600 text-white text-sm rounded-lg hover:bg-emerald-700 shadow-sm flex items-center gap-2">
+                                        Export
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </button>
+
+                                    <div x-show="open" @click.away="open = false" x-transition
+                                        class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-100 z-50">
+
+                                        <a href="{{ route('tickets.export.csv', request()->query()) }}"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                            Export CSV
+                                        </a>
+
+                                        <a href="{{ route('tickets.export.pdf', request()->query()) }}"
+                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                            Export PDF
+                                        </a>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </form>
+
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-50/50">
@@ -118,7 +151,8 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
                             @forelse ($tickets as $ticket)
-                                <tr onclick="window.location='{{ route('tickets.show', $ticket) }}'" class="hover:bg-gray-50/80 transition-colors duration-150 group">
+                                <tr onclick="window.location='{{ route('tickets.show', $ticket) }}'"
+                                    class="hover:bg-gray-50/80 transition-colors duration-150 group">
 
                                     <!-- Ticket ID -->
                                     <td class="px-6 py-4 whitespace-nowrap">

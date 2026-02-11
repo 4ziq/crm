@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Ticket;
 use App\Models\Customer;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
-use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
@@ -16,34 +18,10 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Ticket::with(['customer', 'assignedTo']);
-
-        if ($request->filled('search')) {
-
-            $search = '%' . $request->search . '%';
-
-            $query->where(function ($q) use ($search) {
-                $q->where('id', 'like', $search)
-                    ->orWhere('description', 'like', $search)
-                    ->orWhereHas('customer', function ($customer) use ($search) {
-                        $customer->where('name', 'like', $search);
-                    });
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('priority')) {
-            $query->where('priority', $request->priority);
-        }
-
-        if ($request->filled('assigned_to')) {
-            $query->where('assigned_to', $request->assigned_to);
-        }
-
-        $tickets = $query->latest()->paginate(10)->withQueryString();
+        $tickets = $this->filterTickets($request)
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         $users = User::all();
 
@@ -128,5 +106,62 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket)
     {
         //
+    }
+
+    private function filterTickets($request)
+    {
+        $query = Ticket::with(['customer', 'assignedTo']);
+
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
+
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', $search)
+                    ->orWhere('description', 'like', $search)
+                    ->orWhereHas('customer', function ($q) use ($search) {
+                        $q->where('name', 'like', $search);
+                    });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('priority')) {
+            $query->where('priority', $request->priority);
+        }
+
+        if ($request->filled('assigned_to')) {
+            $query->where('assigned_to', $request->assigned_to);
+        }
+
+        return $query;
+    }
+
+    public function exportCSV(Request $request)
+    {
+        return Excel::download(
+            new \App\Exports\TicketExport($request),
+            'tickets-report.csv'
+        );
+    }
+
+    public function exportPDF(Request $request)
+    {
+        $tickets = $this->filterTickets($request)
+            ->with(['customer', 'assignedTo'])
+            ->get();
+
+        $filters = [
+            'search'      => $request->search,
+            'status'      => $request->status,
+            'priority'    => $request->priority,
+            'assigned_to' => $request->assigned_to,
+        ];
+
+        $pdf = PDF::loadView('tickets.report_pdf', compact('tickets', 'filters'));
+
+        return $pdf->download('tickets-report.pdf');
     }
 }

@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
     Route::put('/tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
     Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+    Route::get('/tickets-export-csv', [TicketController::class, 'exportCSV'])->name('tickets.export.csv');
+    Route::get('/tickets-export-pdf', [TicketController::class, 'exportPDF'])->name('tickets.export.pdf');
 });
 
 require __DIR__.'/auth.php';
