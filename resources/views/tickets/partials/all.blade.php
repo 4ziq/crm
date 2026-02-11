@@ -17,12 +17,12 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
                 <div class="overflow-x-auto">
-                    <div class="flex items-center space-x-2 p-5 border-b border-gray-100">
+                    {{-- <div class="flex items-center space-x-2 p-5 border-b border-gray-100">
                         <span class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-gray-500"></span>
                         <h3 class="text-sm font-bold uppercase tracking-widest text-gray-600">
                             {{ __('All Tickets') }}
                         </h3>
-                    </div>
+                    </div> --}}
                     <!-- Search & Filters -->
                     <form method="GET" action="{{ route('tickets.index') }}"
                         class="p-5 border-b border-gray-100 bg-gray-50/50">

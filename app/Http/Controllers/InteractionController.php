@@ -13,9 +13,22 @@ class InteractionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $interactions = Interaction::with('customer')->latest()->paginate(10);
+        $interactions = Interaction::query()->with('customer');
+
+        if ($request->filled('search')) {
+            $search = '%' . $request->search . '%';
+            
+            $interactions->where(function ($q) use ($search) {
+                $q->where('type', 'like', $search)
+                    ->orWhere('notes', 'like', $search)
+                    ->orWhereHas('customer', function ($customer) use ($search) {
+                        $customer->where('name', 'like', $search);
+                    });
+            });
+        }
+        $interactions = $interactions->latest()->paginate(10)->withQueryString();
         return view('interaction.index', compact('interactions'));
     }
 

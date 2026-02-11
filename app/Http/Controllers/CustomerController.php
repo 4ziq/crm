@@ -13,9 +13,19 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::latest()->paginate(10);
+    
+        $customers = Customer::query();
+
+        if ($request->filled('search')) {
+            $customers->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%')
+                ->orWhere('address', 'like', '%' . $request->search . '%');
+        }
+
+        $customers = $customers->paginate(10);
 
         return view('customers.index', compact('customers'));
     }

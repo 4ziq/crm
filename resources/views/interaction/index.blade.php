@@ -32,6 +32,32 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
                 <div class="overflow-x-auto">
+                    <!-- Search & Filters -->
+                    <form method="GET" action="{{ route('interactions.index') }}"
+                        class="p-5 border-b border-gray-100 bg-gray-50/50">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+
+                            <!-- Search -->
+                            <div>
+                                <input type="text" name="search" value="{{ request('search') }}"
+                                    placeholder="Search ticket, customer..."
+                                    class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex space-x-2">
+                                <button type="submit"
+                                    class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700">
+                                    Filter
+                                </button>
+
+                                <a href="{{ route('interactions.index') }}"
+                                    class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300">
+                                    Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr class="bg-gray-50/50">
@@ -112,7 +138,8 @@
                                                     <form method="POST"
                                                         action="{{ route('interactions.destroy', $interaction) }}">
                                                         @csrf @method('DELETE')
-                                                        <h2 class="text-lg font-semibold text-gray-900">Delete Interaction
+                                                        <h2 class="text-lg font-semibold text-gray-900">Delete
+                                                            Interaction
                                                         </h2>
                                                         <p class="mt-2 text-sm text-gray-600">
                                                             Are you sure you want to delete
