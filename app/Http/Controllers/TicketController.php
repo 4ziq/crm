@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Customer;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
 use Illuminate\Http\Request;
@@ -54,7 +55,10 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        $customers = Customer::all();
+        $users = User::all();
+
+        return view('tickets.create', compact('customers', 'users'));
     }
 
     /**
@@ -62,7 +66,18 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'assigned_to' => 'nullable|exists:users,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'status' => 'required|in:open,in_progress,closed',
+            'priority' => 'required|in:low,medium,high',
+        ]);
+
+        Ticket::create($validated);
+
+        return redirect()->route('tickets.index')->with('success', 'Ticket created successfully.');
     }
 
     /**
@@ -70,7 +85,9 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        //
+        $ticket->load(['customer', 'assignedTo']);
+
+        return view('tickets.show', compact('ticket'));
     }
 
     /**
@@ -78,7 +95,10 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        //
+        $customers = Customer::all();
+        $users = User::all();
+
+        return view('tickets.edit', compact('ticket', 'customers', 'users'));
     }
 
     /**
@@ -86,7 +106,20 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        //
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'status' => 'required|string',
+            'priority' => 'required|string',
+            'assigned_to' => 'nullable|exists:users,id',
+        ]);
+
+        $ticket->update($validated);
+
+        return redirect()
+            ->route('tickets.show', $ticket)
+            ->with('success', 'Ticket updated successfully.');
     }
 
     /**

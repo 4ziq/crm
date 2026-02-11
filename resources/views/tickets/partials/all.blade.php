@@ -17,12 +17,7 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100">
                 <div class="overflow-x-auto">
-                    {{-- <div class="flex items-center space-x-2 p-5 border-b border-gray-100">
-                        <span class="flex-shrink-0 w-2.5 h-2.5 rounded-full bg-gray-500"></span>
-                        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-600">
-                            {{ __('All Tickets') }}
-                        </h3>
-                    </div> --}}
+
                     <!-- Search & Filters -->
                     <form method="GET" action="{{ route('tickets.index') }}"
                         class="p-5 border-b border-gray-100 bg-gray-50/50">
@@ -103,6 +98,9 @@
                                     Customer Name</th>
                                 <th scope="col"
                                     class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                                    Title</th>
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                                     Description</th>
                                 <th scope="col"
                                     class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
@@ -120,7 +118,7 @@
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-100">
                             @forelse ($tickets as $ticket)
-                                <tr class="hover:bg-gray-50/80 transition-colors duration-150 group">
+                                <tr onclick="window.location='{{ route('tickets.show', $ticket) }}'" class="hover:bg-gray-50/80 transition-colors duration-150 group">
 
                                     <!-- Ticket ID -->
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -132,6 +130,13 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-semibold text-gray-900">
                                             {{ $ticket->customer->name }}</div>
+                                    </td>
+
+                                    {{-- title --}}
+                                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                                        <p class="truncate" title="{{ $ticket->title }}">
+                                            {{ $ticket->title ?: '—' }}
+                                        </p>
                                     </td>
 
                                     <!-- Description -->
