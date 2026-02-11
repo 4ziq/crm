@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Customer: ' . $customer->name) }}
+            {{ __('Customer') }}
         </h2>
     </x-slot>
 
@@ -9,7 +9,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-100">
                 <div class="p-8 text-gray-900">
-
+                    <div class="flex items-center pb-2 border-b border-gray-100">
+                        <h3 class="text-sm font-bold uppercase tracking-widest text-gray-600">
+                            {{ __('Edit Customer: ' . '' . $customer->name) }}
+                        </h3>
+                    </div>
                     <form action="{{ route('customers.update', $customer->id) }}" method="POST" class="space-y-6">
                         @csrf
                         @method('PUT')
