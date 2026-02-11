@@ -58,10 +58,10 @@
 
                                     @php $currentType =  $interaction->type; @endphp
 
-                                    <option value="Call" {{ $currentType == 'Call' ? 'selected' : '' }}>Call</option>
-                                    <option value="Email" {{ $currentType == 'Email' ? 'selected' : '' }}>Email
+                                    <option value="call" {{ $currentType == 'call' ? 'selected' : '' }}>Call</option>
+                                    <option value="email" {{ $currentType == 'email' ? 'selected' : '' }}>Email
                                     </option>
-                                    <option value="Meeting" {{ $currentType == 'Meeting' ? 'selected' : '' }}>Meeting
+                                    <option value="meeting" {{ $currentType == 'meeting' ? 'selected' : '' }}>Meeting
                                     </option>
 
                                 </select>

@@ -65,7 +65,7 @@ class InteractionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateInteractionRequest $request, Interaction $interaction)
+    public function update(Request $request, Interaction $interaction)
     {
         $validatedData = $request->validate([
             'customer_id' => 'required|exists:customers,id',
