@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Customer;
 use App\Models\Interaction;
+use App\Models\Ticket;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Symfony\Component\Console\Attribute\Interact;
@@ -23,9 +24,10 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // Customer::factory()->count(50)->create();
-
+        Customer::factory()->count(50)->create();
 
         Interaction::factory()->count(50)->create();
+
+        Ticket::factory(50)->create();
     }
 }
