@@ -32,6 +32,11 @@
                             {{ __('Tickets') }}
                         </x-nav-link>
                     @endcan
+                    @role('admin')
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs(['users.index', 'users.create', 'users.edit'])">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endrole
                 </div>
             </div>
 

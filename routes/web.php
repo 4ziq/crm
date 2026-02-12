@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\InteractionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InteractionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,46 +18,38 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware(['auth'])->group(function () {
 
-    // =========================
-    // Profile (All logged users)
-    // =========================
+    // profile
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    // =========================
-    // CUSTOMERS
-    // =========================
+    // customers
 
-    // View Customers
+
     Route::middleware('permission:manage customers')->group(function () {
 
         Route::get('/customers', [CustomerController::class, 'index'])
             ->name('customers.index');
 
-        // Create Customer (admin only)
         Route::get('/customers/create', [CustomerController::class, 'create'])
             ->name('customers.create');
 
         Route::post('/customers', [CustomerController::class, 'store'])
             ->name('customers.store');
 
-        // Edit Customer
         Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])
             ->name('customers.edit');
 
         Route::put('/customers/{customer}', [CustomerController::class, 'update'])
             ->name('customers.update');
 
-        // Delete Customer
         Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])
             ->name('customers.destroy');
     });
 
-    // =========================
-    // INTERACTIONS
-    // =========================
+    // interactions
 
     Route::middleware(['role:admin|user'])->group(function () {
 
@@ -68,10 +61,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/interactions/{interaction}', [InteractionController::class, 'destroy'])->name('interactions.destroy');
     });
 
-
-    // =========================
-    // TICKETS (Support + Admin)
-    // =========================
+    // tickets
 
     Route::middleware(['permission:manage tickets'])->group(function () {
 
@@ -84,10 +74,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
     });
 
-
-    // =========================
-    // REPORT EXPORT (Admin Only)
-    // =========================
+    // reports
 
     Route::get('/tickets-export-csv', [TicketController::class, 'exportCSV'])
         ->middleware('permission:view reports')
@@ -96,6 +83,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tickets-export-pdf', [TicketController::class, 'exportPDF'])
         ->middleware('permission:view reports')
         ->name('tickets.export.pdf');
+
+    // user
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('users', UserController::class);
+    });
 });
 
 require __DIR__ . '/auth.php';
