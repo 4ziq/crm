@@ -24,6 +24,30 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        $admin = User::create([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $admin->assignRole('admin');
+
+        $support = User::create([
+            'name' => 'Support',
+            'email' => 'support@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $support->assignRole('support');
+
+        $user = User::create([
+            'name' => 'User',
+            'email' => 'user@gmail.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        $user->assignRole('user');
+
         Customer::factory()->count(50)->create();
 
         Interaction::factory()->count(50)->create();

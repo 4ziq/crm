@@ -15,15 +15,23 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs(['customers.index', 'customers.create', 'customers.edit'])">
-                        {{ __('Customers') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('interactions.index')" :active="request()->routeIs(['interactions.index', 'interactions.create', 'interactions.edit'])">
-                        {{ __('Interactions') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('tickets.index')" :active="request()->routeIs(['tickets.index', 'tickets.create', 'tickets.edit'])">
-                        {{ __('Tickets') }}
-                    </x-nav-link>
+                    @can('manage customers')
+                        <x-nav-link :href="route('customers.index')" :active="request()->routeIs(['customers.index', 'customers.create', 'customers.edit'])">
+                            {{ __('Customers') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('interactions.index')" :active="request()->routeIs([
+                            'interactions.index',
+                            'interactions.create',
+                            'interactions.edit',
+                        ])">
+                            {{ __('Interactions') }}
+                        </x-nav-link>
+                    @endcan
+                    @can('manage tickets')
+                        <x-nav-link :href="route('tickets.index')" :active="request()->routeIs(['tickets.index', 'tickets.create', 'tickets.edit'])">
+                            {{ __('Tickets') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
