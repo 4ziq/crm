@@ -12,7 +12,7 @@
 
             <!-- Logo / Title -->
             <h1 class="text-3xl font-bold text-gray-800">
-                CRM Management System
+                ClientConnect CRM
             </h1>
 
             <p class="mt-3 text-gray-500">
